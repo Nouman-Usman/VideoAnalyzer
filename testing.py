@@ -11,6 +11,7 @@ video_path = "C:\\Users\\Nouman\\Downloads\\Video"
 num_frames_per_video = 10  # Adjust as needed
 num_classes = 2  # Replace with the actual number of classes
 
+
 def extract_frames(video_path, num_frames=num_frames_per_video):
     frames = []
     cap = cv2.VideoCapture(video_path)
