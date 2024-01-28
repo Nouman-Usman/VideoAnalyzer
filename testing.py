@@ -31,9 +31,7 @@ def recognizeSpeech():
                 max_output_tokens=800
             )
             printResult(completion2.result)
-            # print(completion2.result)
             print(completion.result)
-            # breakpoint()
             # engine.setProperty('rate', 160)
             # engine.say(text_to_speak)
             # engine.runAndWait()
