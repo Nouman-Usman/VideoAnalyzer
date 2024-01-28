@@ -2,7 +2,7 @@ import os
 from googleapiclient.discovery import build
 
 # Set your API key
-api_key = "AIzaSyC7zXnPNtWJpqSZAacusVbZnJJJWsnRKwU"
+api_key = "API Key"
 
 # Create a YouTube API client
 youtube = build('youtube', 'v3', developerKey=api_key)
