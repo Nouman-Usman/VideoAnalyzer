@@ -4,7 +4,7 @@ import pyttsx3
 from youtubeSearch import printResult
 
 engine = pyttsx3.init()
-API_KEY = 'AIzaSyDzj8yESjjCS6vWNIFAAnjaKVtjGTNsl8g'
+API_KEY = 'API Key'
 palm.configure(api_key=API_KEY)
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
