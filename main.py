@@ -77,48 +77,59 @@ import geocoder
 
 
 def get_current_location():
-    # Get the current location using the IP address
-    location = geocoder.ip('me')
+    try:
+        location = geocoder.ip('me')
+        if location.ok:
+            latitude, longitude = location.latlng
+            return f"{latitude},{longitude}"
+    except Exception as e:
+        print(f"Error getting current location: {e}")
+    return None
 
-    if location.ok:
-        latitude, longitude = location.latlng
-        return f"{latitude},{longitude}"
-    else:
-        print("Unable to retrieve current location.")
-        return None
+
 def get_nearest_shop(api_key, shop_type, location):
     base_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
 
     params = {
         'key': api_key,
-        'location': location,  # Latitude and longitude in the format "lat,lng"
-        'radius': 10000,  # You can adjust the radius based on your preferences
+        'location': location,
+        'radius': 10000,
         'types': shop_type
     }
 
-    response = requests.get(base_url, params=params)
-    results = response.json().get('results', [])
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()
+        print(response.json())
+        results = response.json().get('results', [])
+        print(results)
+        if results:
+            nearest_shop = results[0]
+            name = nearest_shop.get('name', 'N/A')
+            address = nearest_shop.get('vicinity', 'N/A')
+            place_id = nearest_shop.get('place_id', 'N/A')
 
-    if results:
-        nearest_shop = results[0]
-        name = nearest_shop.get('name', 'N/A')
-        address = nearest_shop.get('vicinity', 'N/A')
-        place_id = nearest_shop.get('place_id', 'N/A')
+            print(f"Nearest {shop_type} shop: {name}")
+            print(f"Address: {address}")
+            print(f"Place ID: {place_id}")
 
-        print(f"Nearest {shop_type} shop: {name}")
-        print(f"Address: {address}")
-        print(f"Place ID: {place_id}")
+            maps_url = f"https://www.google.com/maps/place/?q=place_id:{place_id}"
+            print(f"Google Maps URL: {maps_url}")
+        else:
+            print(f"No {shop_type} shops found nearby.")
+    except requests.exceptions.HTTPError as errh:
+        print(f"HTTP Error: {errh}")
+    except requests.exceptions.ConnectionError as errc:
+        print(f"Error Connecting: {errc}")
+    except requests.exceptions.Timeout as errt:
+        print(f"Timeout Error: {errt}")
+    except requests.exceptions.RequestException as err:
+        print(f"Request Exception: {err}")
 
-        # You can also construct the Google Maps URL for navigation
-        maps_url = f"https://www.google.com/maps/place/?q=place_id:{place_id}"
-        print(f"Google Maps URL: {maps_url}")
-    else:
-        print(f"No {shop_type} shops found nearby.")
 
-# Example usage
-api_key = "AIzaSyCZAM5a2K0eHOZuymvXRxo8c2XyJxBumiw"
+api_key = "AIzaSyC7zXnPNtWJpqSZAacusVbZnJJJWsnRKwU"
 current_location = get_current_location()
 shop_type = "computer_repair"
-location = "37.7749,-122.4194"
+# location = "37.7749,-122.4194"
 get_nearest_shop(api_key, shop_type, current_location)
 
